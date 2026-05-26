@@ -1,0 +1,356 @@
+@import "tailwindcss";
+
+/* ===================== CSS CUSTOM PROPERTIES ===================== */
+:root {
+  --transition-speed: 300ms;
+  --font-display: 'Orbitron', monospace;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-body: 'Exo 2', sans-serif;
+}
+
+/* Dark Mode (Default) */
+html.dark {
+  --bg-primary: #050000;
+  --bg-secondary: #110000;
+  --bg-card: #110000;
+  --bg-card-hover: #1a0505;
+  --text-primary: #FFB3B3;
+  --text-secondary: #FF8888;
+  --text-muted: #994444;
+  --accent: #FF0033;
+  --accent-dim: #990022;
+  --accent-glow: rgba(255, 0, 51, 0.3);
+  --border: #330011;
+  --border-bright: #FF0033;
+  --success: #00FF88;
+  --warning: #FFAA00;
+  --danger: #FF0033;
+  --scanline-opacity: 0.03;
+  --glow-strength: 1;
+  --shadow-card: 0 0 20px rgba(255, 0, 51, 0.1);
+  --shadow-accent: 0 0 30px rgba(255, 0, 51, 0.3);
+}
+
+/* Light Mode */
+html.light {
+  --bg-primary: #F5F5F5;
+  --bg-secondary: #EDEDED;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FFF5F5;
+  --text-primary: #1A0000;
+  --text-secondary: #4A1111;
+  --text-muted: #8A5555;
+  --accent: #CC0022;
+  --accent-dim: #880016;
+  --accent-glow: rgba(204, 0, 34, 0.1);
+  --border: #E0C0C0;
+  --border-bright: #CC0022;
+  --success: #00994D;
+  --warning: #CC8800;
+  --danger: #CC0022;
+  --scanline-opacity: 0;
+  --glow-strength: 0;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-accent: 0 2px 12px rgba(204, 0, 34, 0.12);
+}
+
+/* ===================== BASE STYLES ===================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color var(--transition-speed) ease,
+              color var(--transition-speed) ease;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Theme transitions for all elements */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, box-shadow, opacity;
+  transition-duration: var(--transition-speed);
+  transition-timing-function: ease;
+}
+
+/* Exclude animations from theme transition */
+.no-theme-transition,
+.no-theme-transition *,
+.no-theme-transition *::before,
+.no-theme-transition *::after {
+  transition-property: none !important;
+}
+
+/* ===================== SCROLLBAR ===================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-dim);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ===================== FONTS ===================== */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* ===================== SCANLINE OVERLAY ===================== */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, var(--scanline-opacity)) 2px,
+    rgba(0, 0, 0, var(--scanline-opacity)) 4px
+  );
+}
+
+/* Scanline sweep */
+.scanline-sweep::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--accent-glow),
+    transparent
+  );
+  z-index: 9997;
+  animation: scanSweep 4s ease-in-out infinite;
+  opacity: calc(var(--scanline-opacity) * 20);
+  pointer-events: none;
+}
+
+@keyframes scanSweep {
+  0%, 100% { top: -10px; }
+  50% { top: 100vh; }
+}
+
+/* ===================== GLITCH ANIMATION ===================== */
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 2px); }
+}
+
+@keyframes glitchSoft {
+  0%, 100% { transform: translate(0); }
+  25% { transform: translate(-0.5px, 0.5px); }
+  50% { transform: translate(0.5px, -0.5px); }
+  75% { transform: translate(-0.5px, -0.5px); }
+}
+
+.glitch-text {
+  animation: glitch 3s ease-in-out infinite;
+}
+
+html.light .glitch-text {
+  animation: glitchSoft 4s ease-in-out infinite;
+}
+
+/* ===================== NEON GLOW ===================== */
+.neon-glow {
+  text-shadow: 
+    0 0 7px var(--accent),
+    0 0 10px var(--accent),
+    0 0 21px var(--accent),
+    0 0 42px var(--accent);
+}
+
+html.light .neon-glow {
+  text-shadow: none;
+  filter: drop-shadow(0 1px 2px rgba(204, 0, 34, 0.3));
+}
+
+.neon-border {
+  box-shadow: 
+    0 0 5px var(--accent-glow),
+    inset 0 0 5px var(--accent-glow);
+}
+
+html.light .neon-border {
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+}
+
+/* ===================== PULSE ANIMATIONS ===================== */
+@keyframes pulse-green {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
+    opacity: 1;
+  }
+  50% { 
+    box-shadow: 0 0 0 8px rgba(0, 255, 136, 0);
+    opacity: 0.7;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-green 2s ease-in-out infinite;
+}
+
+/* ===================== TYPEWRITER ===================== */
+@keyframes blink-caret {
+  0%, 100% { border-color: var(--accent); }
+  50% { border-color: transparent; }
+}
+
+.caret-blink {
+  border-right: 2px solid var(--accent);
+  animation: blink-caret 1s step-end infinite;
+}
+
+/* ===================== PARTICLES ===================== */
+@keyframes float-particle {
+  0%, 100% { 
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  50% { 
+    transform: translateY(-100vh) translateX(20px);
+  }
+}
+
+/* ===================== POWER GAUGE ===================== */
+@keyframes gauge-fill {
+  from { stroke-dashoffset: 283; }
+}
+
+/* ===================== REDUCED MOTION ===================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .scanlines::after,
+  .scanline-sweep::before {
+    display: none;
+  }
+}
+
+/* ===================== CARD STYLES ===================== */
+.dems-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-speed) ease;
+}
+
+.dems-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-bright);
+  box-shadow: var(--shadow-accent);
+}
+
+.dems-card-static {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ===================== BUTTON ===================== */
+.dems-btn {
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 200ms ease;
+}
+
+.dems-btn:hover {
+  filter: brightness(1.2);
+  box-shadow: var(--shadow-accent);
+}
+
+.dems-btn:active {
+  transform: scale(0.98);
+}
+
+.dems-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: none;
+}
+
+/* ===================== PROGRESS BAR ===================== */
+@keyframes progress-scan {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.progress-bar-animated {
+  background: linear-gradient(
+    90deg,
+    var(--accent-dim),
+    var(--accent),
+    var(--accent-dim)
+  );
+  background-size: 200% 100%;
+  animation: progress-scan 2s ease-in-out infinite;
+}
+
+/* Selection color */
+::selection {
+  background: var(--accent);
+  color: #ffffff;
+}
